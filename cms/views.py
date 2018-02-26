@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.db.models.functions import Substr
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from cms.models import Resource
 from cms.forms import ResourceForm
@@ -7,13 +7,15 @@ from cms.forms import ResourceForm
 
 def resource_list(request, disp_mode='all'):
     if disp_mode == 'all':
-        resources = Resource.objects.all().order_by('hostname')
+        resources = Resource.objects.all()
+        print(resources)
     elif disp_mode == 'only_available':
-        resources = Resource.objects.filter(is_available=True).order_by('hostname')
+        resources = Resource.objects.filter(is_available=True)
     elif disp_mode == 'only_unavailable':
-        resources = Resource.objects.filter(is_available=False).order_by('hostname')
+        resources = Resource.objects.filter(is_available=False)
     else:
         raise NotImplementedError
+    resources = resources.order_by(Substr('hostname', 1, 3))
     return render(request,
                   'cms/resource_list.html',
                   {'resources': resources})
