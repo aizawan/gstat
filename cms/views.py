@@ -15,7 +15,11 @@ def resource_list(request, disp_mode='all'):
         resources = Resource.objects.filter(is_available=False)
     else:
         raise NotImplementedError
-    resources = resources.order_by(Length('hostname'), Concat(Value(00), Substr('hostname', 4, 2)))
+    # Change according to your your environment.
+    # Our environment: "gpu1", "gpu2" .... 
+    resources = resources.order_by(Substr('hostname', 1, 3), 
+                                   Length('hostname'),
+                                   Substr('hostname', 3))
     return render(request,
                   'cms/resource_list.html',
                   {'resources': resources})
