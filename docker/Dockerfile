@@ -1,5 +1,6 @@
 FROM ubuntu:16.04
 
+ARG admin_passwd
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
 	python3 \
@@ -27,6 +28,7 @@ WORKDIR /src
 
 RUN python3 manage.py sqlmigrate cms 0001 && python3 manage.py migrate cms && python3 manage.py migrate
 
+RUN echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', \"${admin_passwd}\")" | python3 manage.py shell
 WORKDIR /
 ADD run.sh /
 

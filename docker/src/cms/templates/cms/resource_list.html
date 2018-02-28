@@ -30,7 +30,7 @@
           <td>{{ resource.locking_user }}</td>
           <td>
             <a href="{% url 'cms:resource_mod' resource_name=resource.hostname %}" class="btn btn-outline-primary btn-sm">Mod</a>
-            <a href="{% url 'cms:resource_del' resource_name=resource.hostname %}" class="btn btn-outline-danger btn-sm">Del</a>
+	    <!--<a href="{% url 'cms:resource_del' resource_name=resource.hostname %}" class="btn btn-outline-danger btn-sm">Del</a>-->
           </td>
         </tr>
         {% endfor %}
