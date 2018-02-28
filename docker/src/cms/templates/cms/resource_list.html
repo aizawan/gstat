@@ -1,0 +1,39 @@
+{% extends "cms/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Resource List{% endblock title %}
+{% block content %}
+    <h4 class="mt-4 border-bottom">Resource List</h4>
+    <a href="{% url 'cms:resource_list' disp_mode='all' %}" class="btn btn-primary btn-sm my-3">All</a>
+    <a href="{% url 'cms:resource_list' disp_mode='only_available' %}" class="btn btn-success btn-sm my-3">Available</a>
+    <a href="{% url 'cms:resource_list' disp_mode='only_unavailable' %}" class="btn btn-danger btn-sm my-3">Unavailable</a>
+    <a href="{% url 'cms:resource_add' %}" class="btn btn-secondary btn-sm my-3">Add</a>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">is_available</th>
+          <th scope="col">locked_by</th>
+          <th scope="col">operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for resource in resources %}
+        <tr>
+          <th scope="row">{{ resource.hostname }}</th>
+          <td>
+              {% if resource.is_available == True %}
+              {% else %}
+                  <span style="color: #dc3545; ">N/A</span>
+              {% endif %}
+          </td>
+          <td>{{ resource.locking_user }}</td>
+          <td>
+            <a href="{% url 'cms:resource_mod' resource_name=resource.hostname %}" class="btn btn-outline-primary btn-sm">Mod</a>
+            <a href="{% url 'cms:resource_del' resource_name=resource.hostname %}" class="btn btn-outline-danger btn-sm">Del</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{% endblock content %}
