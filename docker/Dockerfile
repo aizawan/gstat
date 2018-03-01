@@ -31,6 +31,7 @@ RUN python3 manage.py sqlmigrate cms 0001 && python3 manage.py migrate cms && py
 RUN echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', \"${admin_passwd}\")" | python3 manage.py shell
 WORKDIR /
 ADD run.sh /
+RUN chmod 777 /run.sh
 
 EXPOSE 8888
 CMD ["./run.sh"]
