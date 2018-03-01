@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, HiddenInput
 from cms.models import Resource
 
 
@@ -14,3 +14,9 @@ class ResourceForm(ModelForm):
         else:
             locking_user = self.cleaned_data['locking_user']
         return locking_user
+
+
+class LockResourceForm(ModelForm):
+    class Meta:
+        model = Resource
+        fields = ('locking_user', )

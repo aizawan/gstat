@@ -29,11 +29,46 @@
           </td>
           <td>{{ resource.locking_user }}</td>
           <td>
-            <a href="{% url 'cms:resource_mod' resource_name=resource.hostname %}" class="btn btn-outline-primary btn-sm">Mod</a>
-	    <!--<a href="{% url 'cms:resource_del' resource_name=resource.hostname %}" class="btn btn-outline-danger btn-sm">Del</a>-->
+            <a href="{% url 'cms:resource_lock' resource_name=resource.hostname %}" class="btn btn-outline-primary btn-sm">Lock</a>
+	        <button href="{% url 'cms:resource_unlock' resource_name=resource.hostname %}"
+                    class="btn btn-outline-danger btn-sm unlock_confirm"
+                    data-toggle="modal"
+                    data-target="#unlockModal"
+                    data-pk="{{ resource.hostname }}"
+                    data-url="{%  url 'cms:resource_unlock' resource_name=resource.hostname %}">Unlock</button>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+
+    {# Dialog for unlocking #}
+    <div class="modal fade" id="unlockModal" tabindex="-1" role="dialog" aria-labelledby="unlockModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="unlockModalLabel">Confirm</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+            <p>Unlocking <span id="unlock_pk"></span> ？</p>
+          </div>
+          <div class="modal-footer">
+            <a href="#" class="btn btn-primary" id="unlock_url">OK</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+$(function() {
+  $('.unlock_confirm').on('click', function () {
+     $("#unlock_pk").text($(this).data("pk"));
+     $('#unlock_url').attr('href', $(this).data("url"));
+  });
+});
+</script>
+{% endblock %}

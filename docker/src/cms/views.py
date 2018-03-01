@@ -1,9 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models.functions import Substr, Concat, Length
-from django.db.models import Value
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.db.models.functions import Substr, Length
+from django.views.decorators.csrf import csrf_exempt
 from cms.models import Resource
-from cms.forms import ResourceForm
+from cms.forms import ResourceForm, LockResourceForm
 
 
 def resource_list(request, disp_mode='all'):
@@ -54,4 +53,34 @@ def resource_edit(request, resource_name=None):
 def resource_del(request, resource_name):
     resource = get_object_or_404(Resource, pk=resource_name)
     resource.delete()
+    return redirect('cms:resource_list')
+
+
+@csrf_exempt
+def resource_lock(request, resource_name):
+    resource = get_object_or_404(Resource, pk=resource_name)
+    if request.method == 'POST':
+        form = LockResourceForm(request.POST,
+                                instance=resource)
+        if form.is_valid():
+            resource = form.save(commit=False)
+            resource.is_available = False
+            resource.save()
+            return redirect('cms:resource_list')
+        print('invalid')
+
+    else:
+        form = LockResourceForm(instance=resource)
+    return render(request,
+                  'cms/resource_lock.html',
+                  dict(form=form,
+                       resource_name=resource_name))
+
+
+@csrf_exempt
+def resource_unlock(request, resource_name):
+    resource = get_object_or_404(Resource, pk=resource_name)
+    resource.is_available = True
+    resource.locking_user = ""
+    resource.save()
     return redirect('cms:resource_list')

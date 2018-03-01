@@ -19,4 +19,10 @@ urlpatterns = [
     path('resource/del/<str:resource_name>/',
          views.resource_del,
          name='resource_del'),
+    path('resource/lock/<str:resource_name>/',
+         views.resource_lock,
+         name='resource_lock'),
+    path('resource/unlock/<str:resource_name>/',
+         views.resource_unlock,
+         name='resource_unlock'),
 ]
