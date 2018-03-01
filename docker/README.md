@@ -5,7 +5,7 @@ docker build -t gstat --build-arg admin_passwd="admin_passwd" docker/
 
 ## Create Container
 ```
-docker run -d restart=always -p 8888:8888 gstat
+docker run -d --restart=always -p 8888:8888 --name gstat -h gstat gstat
 ```
 
 ## How to Access
